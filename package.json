@@ -1,0 +1,40 @@
+{
+  "name": "discordcalendarbotjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon",
+    "build": "rimraf ./build && xcopy .\\ts\\config.json .\\build\\ /i && tsc",
+    "start": "npm run build && node build/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/papsop/DiscordCalendarBotJS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/papsop/DiscordCalendarBotJS/issues"
+  },
+  "homepage": "https://github.com/papsop/DiscordCalendarBotJS#readme",
+  "devDependencies": {
+    "@types/node": "^16.10.1",
+    "discord.js": "^13.8.0",
+    "nodemon": "^2.0.12",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.2.1",
+    "tslint": "^6.1.3",
+    "typescript": "^4.7.3"
+  },
+  "dependencies": {
+    "@discordjs/builders": "^0.15.0",
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "chalk": "^3.0.0",
+    "discord-api-types": "^0.23.1",
+    "discord.js": "^13.1.0",
+    "ts-dotenv": "^0.8.3"
+  }
+}
