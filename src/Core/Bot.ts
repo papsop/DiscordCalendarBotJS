@@ -7,13 +7,18 @@ import { I_Command } from "../Commands/I_Command";
 import { CalendarCommand } from "../Commands/CalendarCommand";
 import { StatusCommand } from '../Commands/StatusCommand';
 
+interface CommandEntry
+{
+    [key: string] : I_Command;
+}
+
 export class Bot
 {
     private _appID : string;
     private _token : string;
     private _client : Client;
     private _config : Config;
-    private _commands : I_Command[] = [];
+    private _commands : CommandEntry = {};
 
     constructor(config : Config)
     {
@@ -28,13 +33,13 @@ export class Bot
         // save callbacks for events
         this._client.on('ready', this.handleReady.bind(this));
         this._client.on('interactionCreate', async (interaction : any) => {
-            await interaction.reply({ content: 'Pong!', ephemeral: true });
+            await this.handleInteractionCreate(interaction);
         });
     }
 
     registerCommand(command : I_Command)
     {
-        this._commands.push(command);
+        this._commands[command._name] = command;
     }
 
     run()
@@ -44,7 +49,11 @@ export class Bot
 
     async deployCommands()
     {
-        let rawCommands : JSON[] = this._commands.map( command => command._rawCommandData);
+        let rawCommands : JSON[] = [];
+        for(let entry in this._commands)
+        {
+            rawCommands.push(this._commands[entry]._rawCommandData); 
+        }
 
         console.log(rawCommands);
         const rest = new REST({ version: '9' }).setToken(this._token);
@@ -61,8 +70,22 @@ export class Bot
 
     async handleInteractionCreate(interaction : any)
     {
-        console.log(interaction);
-        //await interaction.reply("ty");
+        if(interaction.isCommand()) await this.handleCommandInteraction(interaction);
+        else if (interaction.isModalSubmit()) await this.handleModalSubmitInteraction(interaction);
     }
 
+    async handleCommandInteraction(interaction : any)
+    {
+        let commandName : string = interaction.commandName;
+        if( !(commandName in this._commands) ) return; // shouldn't happen, but let's check just in case
+        
+        this._commands[commandName].execute();
+        await interaction.reply({ content: 'Pong!', ephemeral: true });
+    }
+
+    async handleModalSubmitInteraction(interaction : any)
+    {
+        console.log("handling modal submit");
+        await interaction.reply({ content: 'Pong!', ephemeral: true });
+    }
 }

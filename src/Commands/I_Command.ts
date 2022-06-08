@@ -5,4 +5,6 @@ export interface I_Command
     _name : string;
     _slashCommand : any;
     _rawCommandData : JSON;
+
+    execute() : void;
 }

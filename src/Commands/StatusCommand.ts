@@ -15,4 +15,9 @@ export class StatusCommand implements I_Command
             
         this._rawCommandData = this._slashCommand.toJSON();
     }
+
+    execute(): void 
+    {
+        console.log("executing status");    
+    }
 }
