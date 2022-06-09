@@ -6,5 +6,5 @@ export interface I_Command
     _slashCommand : any;
     _rawCommandData : JSON;
 
-    execute() : void;
+    execute(interaction : any) : void;
 }
